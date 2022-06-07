@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="debug" default="0"/>
+
+  <arg name="x" default="10"/>
+  <arg name="y" default="10"/>
+  <arg name="z" default="-25"/>
+
+
+  
+     <param name="obstacle_description"
+          command="$(find xacro)/xacro '$(find uuv_nav_cluttered_vel_control)/objects/cylinder.urdf.xacro' --inorder
+          debug:=$(arg debug))
+          inertial_reference_frame:=world" />
+
+
+    <!-- Run a python script to the send a service call to gazebo_ros to spawn the URDF object -->
+    <!--node name="urdf_spawner" pkg="uuv_descriptions" type="spawn_model" respawn="false" output="screen"
+          args="-urdf -x $(arg x) -y $(arg y) -z $(arg z) -R $(arg roll) -P $(arg pitch) -Y $(arg yaw) -model $(arg namespace) -param /$(arg namespace)/robot_description"/-->
+    <!--node name="spawn_gazebo_object" pkg="gazebo_ros" type="spawn_model"  
+	  args="-urdf -param obstacle_description -model cylinder -x $(arg x) -y $(arg y)  -z $(arg z)" respawn="false" output="screen" /-->
+    <node name="urdf_spawner" pkg="uuv_descriptions" type="spawn_model"  
+	  args="-urdf -param obstacle_description -model cylinder -x $(arg x) -y $(arg y)  -z $(arg z)" respawn="false" output="screen" />
+
+</launch>
