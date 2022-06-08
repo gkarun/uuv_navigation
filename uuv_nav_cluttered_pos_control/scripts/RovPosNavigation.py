@@ -29,6 +29,7 @@ from geometry_msgs.msg import Twist, Accel, Vector3
 from sensor_msgs.msg import Joy, LaserScan
 from nav_msgs.msg import Odometry
 import tf.transformations as trans
+import geometry_msgs.msg as geometry_msgs
 
 v = 1
 Rc = 1
@@ -80,7 +81,14 @@ class RovNavigation:
         self.prev_local_pos = Point(0.0, 0.0, 0.0)
         
         # Stub for the current local position of the vehicle
-        self.target_pos = Point(0.0, 0.0, -20.0)
+        if rospy.has_param('~target_point') :
+            target_pos = np.array(rospy.get_param('~target_point'))
+            self.target_pos=geometry_msgs.Point(*target_pos)
+            rospy.logdebug("[ROV_NAV] : inside if -------------------------- > Target position is %s", self.target_pos)
+        else :
+            self.target_pos = Point(0.0, 0.0, 0.0)
+
+        rospy.loginfo("[ROV_NAV] : Target position is %s", self.target_pos)
 
         #Variable for previous relative azimuth
         self.prev_rel_azimuth = 0
@@ -205,11 +213,13 @@ class RovNavigation:
             
             u_alpha = k_delta*sat(-sgn(self.delta)*np.pi/2 + self.delta) + k_rho*sgn(self.delta)*sat(self.rho-rho_safe)
             u_beta  = k_beta*sat(self.rel_elev)
+            print("...<<<<<<<<---------------------------------- OA MODE -------------------------------------->>>>>>>>...")
 
         else : 
 
             u_alpha = k_alpha*sat(self.rel_azimuth)
             u_beta  = k_beta*sat(self.rel_elev)
+            print("...<<<<<<<<---------------------------------- NAVIGATION MODE-------------------------------------->>>>>>>>...")
 
         
         t_span = np.linspace(0, 0.5, 1000)

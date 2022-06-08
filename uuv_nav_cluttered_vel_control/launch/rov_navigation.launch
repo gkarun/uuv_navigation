@@ -17,6 +17,7 @@
     </include>
     
     <!-- Add the obstacle vehicle to the simulation (namespace: rexrov) -->
+    <!--include file="$(find uuv_nav_cluttered_vel_control)/launch/box.launch"-->
     <include file="$(find uuv_nav_cluttered_vel_control)/launch/cylinder.launch">
         <arg name="x" default="10"/>
         <arg name="y" default="10"/>

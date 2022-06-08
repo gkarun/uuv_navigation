@@ -64,7 +64,7 @@ class RovNavigation:
         if rospy.has_param('~target_point') :
             target_pos = np.array(rospy.get_param('~target_point'))
             self.target_pos=geometry_msgs.Point(*target_pos)
-            rospy.loginfo("[ROV_NAV] : inside if -------------------------- > Target position is %s", self.target_pos)
+            rospy.logdebug("[ROV_NAV] : inside if -------------------------- > Target position is %s", self.target_pos)
         else :
             self.target_pos = Point(0.0, 0.0, 0.0)
 

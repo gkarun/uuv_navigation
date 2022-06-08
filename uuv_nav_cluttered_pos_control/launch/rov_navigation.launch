@@ -13,11 +13,12 @@
         <arg name="z" default="-10"/>
         <arg name="yaw" default="0"/>
         <arg name="mode" default="sonar"/>
+  	<arg name="use_ned_frame" default="false"/>
     </include>
     
     <!-- Add the obstacle vehicle to the simulation (namespace: rexrov) -->
-    <!--include file="$(find uuv_nav_cluttered_vel_control)/launch/cylinder.launch"-->
-    <include file="$(find uuv_nav_cluttered_vel_control)/launch/box.launch">
+    <!--include file="$(find uuv_nav_cluttered_vel_control)/launch/box.launch"-->
+    <include file="$(find uuv_nav_cluttered_vel_control)/launch/cylinder.launch">
         <arg name="x" default="15"/>
         <arg name="y" default="15"/>
         <arg name="z" default="-25"/>
@@ -28,6 +29,9 @@
     <include file="$(find uuv_nav_cluttered_pos_control)/launch/position_controller.launch">
         <arg name="uuv_name" value="rexrov"/>
         <arg name="model_name" value="rexrov"/>
+        <arg name="target_x" default="0"/>
+        <arg name="target_y" default="0"/>
+        <arg name="target_z" default="-20"/>
     </include>
 
     <!-- Start the recording node  -->

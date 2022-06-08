@@ -2,6 +2,9 @@
 <launch>
   <arg name="model_name" />
   <arg name="uuv_name" default="$(arg model_name)"/>
+  <arg name="target_x" default="$(arg target_x)"/>
+  <arg name="target_y" default="$(arg target_y)"/>
+  <arg name="target_z" default="$(arg target_z)"/>
 
   <include file="$(find uuv_thruster_manager)/launch/thruster_manager.launch">
     <arg name="uuv_name" value="$(arg uuv_name)" />
@@ -33,6 +36,10 @@
         output="screen">
       <remap from="odom" to="/$(arg uuv_name)/pose_gt"/>
       <remap from="cmd_pose" to="/$(arg uuv_name)/cmd_pose"/>
+      <rosparam subst_value="true">
+              target_point: 
+                [$(arg target_x), $(arg target_y), $(arg target_z)]
+      </rosparam>
     </node>
   </group>
 
