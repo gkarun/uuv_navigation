@@ -24,13 +24,13 @@ from nav_msgs.msg import Odometry
 import tf.transformations as trans
 import geometry_msgs.msg as geometry_msgs
 
-v = 0.5
+v = 0.1
 Rc = 1
-k_alpha = 0.6
-k_beta = 0.6
+k_alpha = 0.21
+k_beta = 0.21
 
-k_rho = 0.6
-k_delta = 0.4
+k_rho = 0.21
+k_delta = 0.1
 
 rho_detect = 10
 rho_safe = 5
@@ -80,7 +80,7 @@ class RovNavigation:
         self.rel_elevation = 0.0
 
         # Minimum distance to the obstacle
-        self.rho = 100
+        self.rho = 100.0
 
         # Angle to the minimum distance point on the obstacle
         self.delta = np.pi
@@ -139,23 +139,30 @@ class RovNavigation:
         self.delta = msg.angle_min + min_range_index*msg.angle_increment
         mid = int(np.round(np.fabs(msg.angle_min)/msg.angle_increment))
         look_ahead_index = int(np.abs((mid - 100) % mid))
-        # rospy.logdebug("self.rho = %s, self.delta  = %s", self.rho, self.delta)
+        rospy.logdebug("[ROV_NAV] : self.rho = %s, self.delta  = %s", self.rho, self.delta)
         # rospy.logdebug("mid = %s, look_ahead_index = %s", mid, look_ahead_index)
         if not self.OA_MODE:
             #check Oobstacle in the viscinity
             if(np.min(ranges[mid-look_ahead_index:mid+look_ahead_index])<rho_detect) :
                 self.OA_MODE = True
-        elif((self.prev_rel_azimuth!=self.rel_azimuth) and  np.min(ranges[mid-look_ahead_index:mid+look_ahead_index])>rho_detect) :
+        #elif((self.prev_rel_azimuth!=self.rel_azimuth) and  np.min(ranges[mid-look_ahead_index:mid+look_ahead_index])>rho_detect) :
+        elif sgn(sgn(self.rel_azimuth)>0) :
+            rospy.logdebug("[ROV_NAV] : The min value in the left side np.min(ranges[mid:])is %s ",np.min(ranges[mid:]))
+            if (np.min(ranges[mid:])>rho_detect or  np.isinf(np.min(ranges[mid:]))) :
                 self.OA_MODE = False
-        # rospy.logdebug("[ROV_NAV] : ---------- sonar_callback end --------------")
+        elif sgn(sgn(self.rel_azimuth)<0) :
+            rospy.logdebug("[ROV_NAV] : The min value in the right side np.min(ranges[:mid])is %s ",np.min(ranges[:mid]))
+            if (np.min(ranges[:mid])>rho_detect or  np.isinf(np.min(ranges[:mid]))) :
+                self.OA_MODE = False
+        #rospy.logdebug("[ROV_NAV] : ---------- sonar_callback end --------------")
             
     
     def _calculate_vel(self):
         # rospy.logdebug("[ROV_NAV] : ------------------- start of _calculate_waypoint --------------------")
         
         cmd = Twist()
-        cmd.linear = Vector3(0, 0, 0)
-        cmd.angular = Vector3(0, 0, 0)
+        cmd.linear = Vector3(0.0, 0.0, 0.0)
+        cmd.angular = Vector3(0.0, 0.0, 0.0)
         
         #rospy.logdebug("curr_pos = %s", self.local_pos)
 
@@ -180,7 +187,6 @@ class RovNavigation:
         self.rel_elev = self.phi + self.beta
         #rel_elev = np.arctan(np.sin(rel_elev)/np.cos(rel_elev))
 
-        rospy.logdebug("[ROV_NAV] : alpha = %s, theta = %s, beta = %s, phi = %s, rel_azimuth = %s, rel_elev = %s", self.alpha*180/np.pi, self.theta*180/np.pi, self.beta*180/np.pi, self.phi*180/np.pi, self.rel_azimuth*180/np.pi, self.rel_elev*180/np.pi)
 
         if self.R < Rc :
             self.NAV_MODE = False
@@ -192,17 +198,20 @@ class RovNavigation:
 
 
         if self.OA_MODE:
+            rospy.logdebug("[ROV_NAV OA MODE] : alpha = %s, theta = %s, beta = %s, phi = %s, rel_azimuth = %s, rel_elev = %s", self.alpha*180/np.pi, self.theta*180/np.pi, self.beta*180/np.pi, self.phi*180/np.pi, self.rel_azimuth*180/np.pi, self.rel_elev*180/np.pi)
             u_alpha = k_delta*sat(-sgn(self.delta)*np.pi/2 + self.delta) + k_rho*sgn(self.delta)*sat(self.rho-rho_safe)
             u_beta  = k_beta*sat(self.rel_elev)
         else : 
+            rospy.logdebug("[ROV_NAV HOMING MODE] : alpha = %s, theta = %s, beta = %s, phi = %s, rel_azimuth = %s, rel_elev = %s", self.alpha*180/np.pi, self.theta*180/np.pi, self.beta*180/np.pi, self.phi*180/np.pi, self.rel_azimuth*180/np.pi, self.rel_elev*180/np.pi)
             u_alpha = k_alpha*sat(self.rel_azimuth)
             u_beta  = k_beta*sat(self.rel_elev)
 
         rospy.logdebug("[ROV_NAV] : u_alpha = %s, u_beta = %s", u_alpha,u_beta)
         
-        R_bw = trans.quaternion_matrix(self.local_orientation)[0:3, 0:3].transpose()
+        #R_bw = trans.quaternion_matrix(self.local_orientation)[0:3, 0:3].transpose()
         cmd_l = np.array([v, 0, 0])
-        cmd_a = R_bw.dot(np.array([0, u_beta, u_alpha]))
+        #cmd_a = R_bw.dot(np.array([0, u_beta, u_alpha]))
+        cmd_a = np.array([0, -u_beta, u_alpha])
         cmd.linear = geometry_msgs.Vector3(*cmd_l)
         cmd.angular = geometry_msgs.Vector3(*cmd_a)
         
@@ -219,10 +228,10 @@ if __name__ == '__main__':
     rospy.loginfo('Starting [%s] node' % node_name)
 
     nav = RovNavigation()
-    rate = rospy.Rate(5)
+    rate = rospy.Rate(20)
     while not rospy.is_shutdown():
         if nav.COLLISION : 
-            rospy.loginfo("[ROV_NAV] : Collisison Detected. distance to obstacle reduced to %s", nav.rho)
+            rospy.loginfo_once("[ROV_NAV] : Collisison Detected. distance to obstacle reduced to %s", nav.rho)
             cmd = Twist()
             nav._output_pub.publish(cmd)
             continue

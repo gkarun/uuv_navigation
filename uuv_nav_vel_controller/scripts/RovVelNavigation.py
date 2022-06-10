@@ -24,10 +24,10 @@ from nav_msgs.msg import Odometry
 import tf.transformations as trans
 import geometry_msgs.msg as geometry_msgs
 
-v = 0.5
+v = 0.1
 Rc = 1
-k_alpha = 0.6
-k_beta = 0.6
+k_alpha = 0.21
+k_beta = 0.21
 
 def sgn(x):
     if x>0:

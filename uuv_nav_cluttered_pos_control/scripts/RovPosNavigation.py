@@ -31,13 +31,13 @@ from nav_msgs.msg import Odometry
 import tf.transformations as trans
 import geometry_msgs.msg as geometry_msgs
 
-v = 1
+v = 0.5
 Rc = 1
 k_alpha = 1.1
 k_beta = 1.1
 
-k_rho = 0.6
-k_delta = 0.5
+k_rho = 0.65
+k_delta = 0.3
 
 rho_detect = 10
 rho_safe = 5
@@ -91,16 +91,16 @@ class RovNavigation:
         rospy.loginfo("[ROV_NAV] : Target position is %s", self.target_pos)
 
         #Variable for previous relative azimuth
-        self.prev_rel_azimuth = 0
+        self.prev_rel_azimuth = 0.0
 
         #Variable for previous relative azimuth
-        self.rel_azimuth = 0
+        self.rel_azimuth = 0.0
 
         #Variable for previous relative azimuth
-        self.rel_elevation = 0
+        self.rel_elevation = 0.0
 
         # Minimum distance to the obstacle
-        self.rho = 100
+        self.rho = 100.0
 
         # Angle to the minimum distance point on the obstacle
         self.delta = np.pi
@@ -247,7 +247,7 @@ if __name__ == '__main__':
     rospy.loginfo('Starting [%s] node' % node_name)
 
     nav = RovNavigation()
-    rate = rospy.Rate(10)
+    rate = rospy.Rate(20)
     while not rospy.is_shutdown():
         if nav.COLLISION :
             rospy.loginfo("[ROV_NAV] : Collisison Detected. distance to obstacle reduced to %s", nav.rho)
