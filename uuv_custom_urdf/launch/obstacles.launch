@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="debug" default="0"/>
+
+    <include file="$(find uuv_custom_urdf)/launch/cylinder_model.launch">
+        <arg name="x" default="50"/>
+        <arg name="y" default="40"/>
+        <arg name="z" default="-25"/>
+        <arg name="cylinder_model_name" default="cyl_1"/>
+    </include>
+
+    <include file="$(find uuv_custom_urdf)/launch/cylinder_model.launch">
+        <arg name="x" default="35"/>
+        <arg name="y" default="20"/>
+        <arg name="z" default="-25"/>
+        <arg name="cylinder_model_name" default="cyl_2"/>
+    </include>
+
+    <include file="$(find uuv_custom_urdf)/launch/cylinder_model.launch">
+        <arg name="x" default="20"/>
+        <arg name="y" default="-25"/>
+        <arg name="z" default="-25"/>
+        <arg name="cylinder_model_name" default="cyl_3"/>
+    </include>
+
+    <include file="$(find uuv_custom_urdf)/launch/cylinder_model.launch">
+        <arg name="x" default="30"/>
+        <arg name="y" default="60"/>
+        <arg name="z" default="-25"/>
+        <arg name="cylinder_model_name" default="cyl_4"/>
+    </include>
+
+    <include file="$(find uuv_custom_urdf)/launch/cylinder_model.launch">
+        <arg name="x" default="-20"/>
+        <arg name="y" default="-20"/>
+        <arg name="z" default="-25"/>
+        <arg name="cylinder_model_name" default="cyl_5"/>
+    </include>
+
+    <include file="$(find uuv_custom_urdf)/launch/cylinder_model.launch">
+        <arg name="x" default="-20"/>
+        <arg name="y" default="30"/>
+        <arg name="z" default="-25"/>
+        <arg name="cylinder_model_name" default="cyl_6"/>
+    </include>
+
+    <include file="$(find uuv_custom_urdf)/launch/box_model.launch">
+        <arg name="x" default="65"/>
+        <arg name="y" default="65"/>
+        <arg name="z" default="-25"/>
+        <arg name="box_model_name" default="box_1"/>
+    </include>
+
+    <include file="$(find uuv_custom_urdf)/launch/box_model.launch">
+        <arg name="x" default="10"/>
+        <arg name="y" default="10"/>
+        <arg name="z" default="-25"/>
+        <arg name="box_model_name" default="box_2"/>
+    </include>
+
+    <include file="$(find uuv_custom_urdf)/launch/box_model.launch">
+        <arg name="x" default="5"/>
+        <arg name="y" default="50"/>
+        <arg name="z" default="-25"/>
+        <arg name="box_model_name" default="box_3"/>
+    </include>
+
+    <include file="$(find uuv_custom_urdf)/launch/box_model.launch">
+        <arg name="x" default="40"/>
+        <arg name="y" default="-15"/>
+        <arg name="z" default="-25"/>
+        <arg name="box_model_name" default="box_4"/>
+    </include>
+
+    <include file="$(find uuv_custom_urdf)/launch/box_model.launch">
+        <arg name="x" default="60"/>
+        <arg name="y" default="0"/>
+        <arg name="z" default="-25"/>
+        <arg name="box_model_name" default="box_5"/>
+    </include>
+
+</launch>

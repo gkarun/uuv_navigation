@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="debug" default="0"/>
+
+  <arg name="x" default="10"/>
+  <arg name="y" default="10"/>
+  <arg name="z" default="-25"/>
+  <arg name="cylinder_model_name" default="cylinder"/>
+
+  
+     <param name="cylinder_description"
+          command="$(find xacro)/xacro '$(find uuv_custom_urdf)/urdf/cylinder.urdf.xacro' --inorder
+          debug:=$(arg debug))
+          inertial_reference_frame:=world" />
+
+
+    <!-- Run a python script to the send a service call to gazebo_ros to spawn the URDF object -->
+    <node name="urdf_spawner_$(arg cylinder_model_name)" pkg="uuv_descriptions" type="spawn_model"  
+	  args="-urdf -param cylinder_description -model $(arg cylinder_model_name) -x $(arg x) -y $(arg y)  -z $(arg z)" respawn="false" output="screen" />
+
+</launch>
