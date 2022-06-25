@@ -5,17 +5,20 @@
   <arg name="x" default="10"/>
   <arg name="y" default="10"/>
   <arg name="z" default="-25"/>
+  <arg name="length" default="20"/>
+  <arg name="breadth" default="10"/>
+  <arg name="height" default="150"/>
   <arg name="box_model_name" default="box"/>
 
   
-     <param name="box_description"
+     <param name="box_description_$(arg box_model_name)"
           command="$(find xacro)/xacro '$(find uuv_custom_urdf)/urdf/box.urdf.xacro' --inorder
           debug:=$(arg debug))
-          inertial_reference_frame:=world" />
+          inertial_reference_frame:=world length:=$(arg length) breadth:=$(arg breadth)  height:=$(arg height)" />
 
 
     <!-- Run a python script to the send a service call to gazebo_ros to spawn the URDF object -->
     <node name="urdf_spawner_$(arg box_model_name)" pkg="uuv_descriptions" type="spawn_model"  
-	  args="-urdf -param box_description -model $(arg box_model_name) -x $(arg x) -y $(arg y)  -z $(arg z)" respawn="false" output="screen" />
+	  args="-urdf -param box_description_$(arg box_model_name) -model $(arg box_model_name) -x $(arg x) -y $(arg y)  -z $(arg z) " respawn="false" output="screen" />
 
 </launch>

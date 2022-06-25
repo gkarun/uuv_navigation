@@ -41,6 +41,8 @@
         <arg name="x" default="-20"/>
         <arg name="y" default="30"/>
         <arg name="z" default="-25"/>
+        <arg name="radius" default="4"/>
+        <arg name="height" default="150"/>
         <arg name="cylinder_model_name" default="cyl_6"/>
     </include>
 
@@ -76,6 +78,9 @@
         <arg name="x" default="60"/>
         <arg name="y" default="0"/>
         <arg name="z" default="-25"/>
+        <arg name="length" default="10"/>
+        <arg name="breadth" default="10"/>
+        <arg name="height" default="150"/>
         <arg name="box_model_name" default="box_5"/>
     </include>
 

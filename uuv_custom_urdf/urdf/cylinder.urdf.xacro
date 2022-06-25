@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="cylinder">
 
-  <xacro:property name="r" value="8" />
-  <xacro:property name="h" value="150" />
+  <xacro:arg name="radius" default="1" />
+  <xacro:arg name="height" default="150" />
+  
+  <xacro:property name="r" value="$(arg radius)" />
+  <xacro:property name="h" value="$(arg height)" />
 
   <!-- Used for fixing robot to Gazebo 'base_link' -->
   <link name="world"/>

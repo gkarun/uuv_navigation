@@ -353,8 +353,8 @@ class RovNavigation:
 
         if self.OA_MODE:
             #rospy.loginfo("[ROV_NAV OA MODE]")
-            rospy.loginfo("[ROV_NAV OA MODE] : rho = %s, delta = %s, front_rho = %s, front_delta = %s, left_rho = %s, left_delta = %s, right_rho = %s, right_delta = %s", self.rho, self.delta,self.front_rho, self.front_delta,self.left_rho, self.left_delta,self.right_rho, self.right_delta)
-	    rospy.loginfo("[ROV_NAV OA MODE] : alpha = %s, theta = %s, beta = %s, phi = %s, rel_azimuth = %s, rel_elev = %s", self.alpha*180/np.pi, self.theta*180/np.pi, self.beta*180/np.pi, self.phi*180/np.pi, self.rel_azimuth*180/np.pi, self.rel_elev*180/np.pi)
+            rospy.logdebug("[ROV_NAV OA MODE] : rho = %s, delta = %s, front_rho = %s, front_delta = %s, left_rho = %s, left_delta = %s, right_rho = %s, right_delta = %s", self.rho, self.delta,self.front_rho, self.front_delta,self.left_rho, self.left_delta,self.right_rho, self.right_delta)
+	    rospy.logdebug("[ROV_NAV OA MODE] : alpha = %s, theta = %s, beta = %s, phi = %s, rel_azimuth = %s, rel_elev = %s", self.alpha*180/np.pi, self.theta*180/np.pi, self.beta*180/np.pi, self.phi*180/np.pi, self.rel_azimuth*180/np.pi, self.rel_elev*180/np.pi)
             u_alpha = k_delta*sat(-sgn(self.delta)*np.pi/2 + self.delta) + k_rho*sgn(self.delta)*sat(self.rho-rho_safe)
             u_beta  = k_beta*sat(self.rel_elev)
         else : 
